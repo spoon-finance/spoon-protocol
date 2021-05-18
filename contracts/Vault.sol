@@ -55,8 +55,10 @@ contract Vault is ERC20, Ownable {
     }
 
     function setStrategy(address _strategy) public onlyOwner {
+        IStrategy(strategy).withdrawAll();
         strategy = _strategy;
         IERC20(want).safeApprove(_strategy, uint256(-1));
+        IStrategy(strategy).deposit(IERC20(want).balanceOf(address(this)));
     }
 
 }
