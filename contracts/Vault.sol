@@ -47,6 +47,7 @@ contract Vault is ERC20, Ownable {
         uint256 wantAmount = IStrategy(strategy).totalBalance().mul(amount).div(totalSupply());
         IStrategy(strategy).withdraw(wantAmount);
         IERC20(want).safeTransfer(msg.sender, wantAmount);
+        _burn(msg.sender, amount);
         emit Withdraw(msg.sender, amount, wantAmount);
     }
 

@@ -12,13 +12,14 @@ contract FtmVault is ERC20, Ownable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
-    address public want = 0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83;
+    address public want;
     address public strategy;
 
     event Deposit(address indexed user, uint256 amount, uint256 mintAmount);
     event Withdraw(address indexed user, uint256 amount, uint256 wantAmount);
 
     constructor(
+        address _want,
         address _strategy,
         string memory name,
         string memory symbol
@@ -26,13 +27,18 @@ contract FtmVault is ERC20, Ownable {
         public 
         ERC20(name, symbol) 
     {
+        want = _want;
         strategy = _strategy;
         IERC20(want).safeApprove(_strategy, uint256(-1));
     }
 
+    receive() external payable {
+    }
+
     function deposit(uint256 amount) payable public {
+        require(msg.value >= amount, "insufficient value");
         if (msg.value > amount) {
-            msg.sender.transfer(msg.value.sub(amount));
+           msg.sender.transfer(msg.value.sub(amount));
         }
         IWFTM(want).deposit{value: amount}();
         uint256 mintAmount = amount;
@@ -49,6 +55,7 @@ contract FtmVault is ERC20, Ownable {
         IStrategy(strategy).withdraw(wantAmount);
         IWFTM(want).withdraw(wantAmount);
         msg.sender.transfer(wantAmount);
+        _burn(msg.sender, amount);
         emit Withdraw(msg.sender, amount, wantAmount);
     }
 
