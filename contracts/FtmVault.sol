@@ -19,7 +19,6 @@ contract FtmVault is ERC20, Ownable {
     event Withdraw(address indexed user, uint256 amount, uint256 wantAmount);
 
     constructor(
-        address _want,
         address _strategy,
         string memory name,
         string memory symbol
@@ -27,9 +26,8 @@ contract FtmVault is ERC20, Ownable {
         public 
         ERC20(name, symbol) 
     {
-        want = _want;
         strategy = _strategy;
-        IERC20(_want).safeApprove(_strategy, uint256(-1));
+        IERC20(want).safeApprove(_strategy, uint256(-1));
     }
 
     function deposit(uint256 amount) payable public {
