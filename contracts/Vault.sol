@@ -32,6 +32,10 @@ contract Vault is ERC20, Ownable {
         IERC20(_want).safeApprove(_strategy, uint256(-1));
     }
 
+    function decimals() public view override returns (uint8) {
+        return IDecimal(want).decimals();
+    }
+
     function deposit(uint256 amount) public {
         IERC20(want).safeTransferFrom(msg.sender, address(this), amount);
         uint256 mintAmount = amount;
@@ -62,4 +66,8 @@ contract Vault is ERC20, Ownable {
         IStrategy(strategy).deposit(IERC20(want).balanceOf(address(this)));
     }
 
+}
+
+interface IDecimal {
+    function decimals() external view returns (uint8);
 }

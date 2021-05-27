@@ -3,10 +3,12 @@ pragma solidity ^0.6.0;
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
+import '@openzeppelin/contracts/access/Ownable.sol';
+
 
 import '../interfaces/IStrategy.sol';
 
-contract BaseStrategy is IStrategy {
+contract BaseStrategy is IStrategy, Ownable {
     using SafeMath for uint256; 
     using SafeERC20 for IERC20;
 
@@ -16,15 +18,15 @@ contract BaseStrategy is IStrategy {
         want = _want;
     }
 
-    function deposit(uint256 amount) external override {
+    function deposit(uint256 amount) external override onlyOwner {
         IERC20(want).safeTransferFrom(msg.sender, address(this), amount);
     }
 
-    function withdraw(uint256 amount) public override {
+    function withdraw(uint256 amount) public override onlyOwner {
         IERC20(want).safeTransfer(msg.sender, amount);
     }
 
-    function withdrawAll() external override {
+    function withdrawAll() external override onlyOwner {
         withdraw(totalBalance());
     }
 
