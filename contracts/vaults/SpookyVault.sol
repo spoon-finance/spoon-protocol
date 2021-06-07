@@ -123,12 +123,12 @@ contract SpookyVault is BaseVault {
     }
 
     function setFeeRate(uint256 _rate) public onlyOwner {
-        require(_rate <= 100, "invalid rate");
+        require(_rate <= 50, "invalid rate");
         feeRate = _rate;
     }
 
     function setDevRate(uint256 _rate) public onlyOwner {
-        require(_rate <= 20, "invalid");
+        require(_rate <= 10, "invalid");
         devRate = _rate;
     }
 
