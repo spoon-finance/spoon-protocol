@@ -8,7 +8,7 @@ import '@openzeppelin/contracts/access/Ownable.sol';
 
 import './interfaces/IStrategy.sol';
 
-contract Vault is ERC20, Ownable {
+contract Earn is ERC20, Ownable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
