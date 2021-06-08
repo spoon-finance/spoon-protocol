@@ -55,7 +55,10 @@ contract SpookyVault is BaseVault {
         token1 = IUniswapV2Pair(lpToken).token1();
         path0 = _path0;
         path1 = _path1;
-        IERC20(lpToken).safeApprove(spookyMasterChef, 10**60);
+        IERC20(lpToken).approve(spookyMasterChef, uint256(-1));
+        IERC20(spookyToken).approve(spookyMasterChef, uint256(-1));
+        IERC20(token0).approve(spookyMasterChef, uint256(-1));
+        IERC20(token1).approve(spookyMasterChef, uint256(-1));
     }
 
     function _harvest() internal override {

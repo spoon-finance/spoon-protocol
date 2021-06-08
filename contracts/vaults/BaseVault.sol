@@ -68,7 +68,7 @@ abstract contract BaseVault is IVault, ERC20, Ownable {
         }
         
         IERC20(wantToken).safeTransferFrom(msg.sender, address(this), amount);
-        _mint(address(this), shareAmount);
+        _mint(msg.sender, shareAmount);
         lastDepositTimes[msg.sender] = block.timestamp;
         
         _invest();
@@ -77,7 +77,7 @@ abstract contract BaseVault is IVault, ERC20, Ownable {
     function withdraw(uint256 shareAmount) public override onlyEOA {
         uint256 amount = shareAmount.mul(_totalTokenBalance()).div(totalShareBalance());
 
-        _burn(address(this), shareAmount);
+        _burn(msg.sender, shareAmount);
 
         uint256 localBalance = IERC20(wantToken).balanceOf(address(this));
         if (amount > localBalance) {
